@@ -25,6 +25,7 @@ from commands.backup import BackupCommands
 from commands.system import SystemCommands
 from commands.doctor import DoctorCommand
 from commands.interactive import run_interactive
+from commands.config import run as run_config
 
 
 def _normalize_format_argv(argv: list) -> tuple:
@@ -220,6 +221,9 @@ def build_parser():
     sys_hostname = sys_sub.add_parser("hostname", help="查询/修改主机名")
     sys_hostname.add_argument("new_hostname", nargs="?", help="新主机名（省略则查询当前）")
 
+    # --- config ---
+    subparsers.add_parser("config", help="首次配置（设置路由器连接信息）")
+
     # --- doctor ---
     doctor_parser = subparsers.add_parser("doctor", help="路由器自检（诊断）")
     doctor_parser.add_argument("--quick", action="store_true",
@@ -229,7 +233,7 @@ def build_parser():
 
     # --- interactive / config ---
     interactive_parser = subparsers.add_parser(
-        "interactive", aliases=["config", "conf"],
+        "interactive", aliases=["conf"],
         help="交互式配置（向导模式）"
     )
     interactive_parser.add_argument(
@@ -371,16 +375,20 @@ def main():
             print(result)
             return 0
 
-        elif args.command in ("interactive", "config", "conf") or args.interactive:
-            # 交互式配置模式
-            if args.command in ("interactive", "config", "conf"):
+        elif args.command in ("interactive", "conf") or args.interactive:
+            # 交互式配置模式（需要先有 SSH 连接）
+            if args.command in ("interactive", "conf"):
                 target = getattr(args, "sub", None) or "config"
             else:
-                # -I flag on any command: 引导进入配置菜单
                 target = "config"
             result = run_interactive(ssh, output, target)
             if isinstance(result, dict):
                 output.out(result)
+            return 0
+
+        elif args.command == "config":
+            # 首次配置引导（不需要 SSH 连接）
+            run_config(args)
             return 0
 
         if result is not None:
