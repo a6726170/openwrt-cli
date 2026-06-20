@@ -132,6 +132,7 @@ def build_parser():
     net_sub.add_parser("dns", help="DNS 服务器")
     net_sub.add_parser("dhcp", help="DHCP 状态")
     net_sub.add_parser("leases", help="DHCP 租约")
+    net_sub.add_parser("stats", help="接口流量统计（字节数/包数/错包）")
 
     net_reload = net_sub.add_parser("reload", help="重载网络配置")
     net_reload.add_argument("interface", nargs="?", help="指定接口（留空重载全部）")
