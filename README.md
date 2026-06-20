@@ -79,6 +79,7 @@ openwrt-cli network interfaces  # 所有网络接口
 openwrt-cli network routes       # 路由表
 openwrt-cli network leases        # DHCP 在线设备（含 MAC 厂商）
 openwrt-cli network dns           # DNS 服务器
+openwrt-cli network stats         # 接口流量统计（字节/包/错包）
 openwrt-cli network reload       # 重启网络服务
 ```
 
