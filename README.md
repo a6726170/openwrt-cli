@@ -34,6 +34,8 @@ pip install -e .
 
 **Windows 一键安装**
 ```cmd
+git clone https://github.com/a6726170/openwrt-cli.git
+cd openwrt-cli
 install.bat
 ```
 
